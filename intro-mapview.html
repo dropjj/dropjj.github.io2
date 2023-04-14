@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Intro to MapView - Create a 2D map | Sample | ArcGIS Maps SDK for
+      JavaScript 4.26
+    </title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.26/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.26/"></script>
+
+    <script>
+      require([
+        "esri/Map", // 添加类的引用
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/widgets/Legend",
+        "esri/widgets/ScaleBar"
+      ], (Map, MapView, FeatureLayer, Legend, ScaleBar) => {
+        // 类的别名
+        // ------------------------------------------------------------------
+        // 添加要素1
+        const flayer1 = new FeatureLayer({
+          //图层要素的url
+          // URL to the service
+          url: "https://www.geosceneonline.cn/server/rest/services/Hosted/Incidentsshiyanyi/FeatureServer"
+        });
+
+        // ------------------------------------------------------------------
+        // 添加要素2
+        const flayer2 = new FeatureLayer({
+          //图层要素的url
+          // URL to the service
+          url: "https://www.geosceneonline.cn/server/rest/services/Hosted/%E7%A6%8F%E5%B7%9E%E5%B8%82%E5%9C%B0%E9%93%81%E5%91%A8%E8%BE%B9%E6%99%AF%E7%82%B9%E5%9C%B0%E5%9B%BE/FeatureServer"
+        });
+
+        const map = new Map({
+          basemap: "topo-vector",
+          layers: [flayer1, flayer2] // layers数组，可以存放多个图层
+        });
+        //map.layers.add(flayer1);
+        //map.layers.add(tiledlayer);
+        //map.addMany(flayer1, tiledlayer)
+
+        // ------------------------------------------------------------------
+        // 设置视图
+        const view1 = new MapView({
+          container: "viewDiv", // 视图容器存放在当前网页的目录下
+          map: map,
+          zoom: 13,
+          center: [119.28, 26.08] // longitude, latitude
+        });
+
+        // ------------------------------------------------------------------
+        // 设置图例
+        const legend = new Legend({
+          view: view1,
+          layerInfos: [
+            {
+              layer: flayer1,
+              title: "事件类型"
+            }
+          ]
+        });
+
+        // Add widget to the bottom right corner of the view
+        view1.ui.add(legend, "bottom-right");
+
+        // ------------------------------------------------------------------
+        // 设置比例尺
+        let scaleBar = new ScaleBar({
+          view: view1,
+          style: "ruler",
+          unit: "metric"
+        });
+        // Add widget to the bottom left corner of the view
+        view1.ui.add(scaleBar, {
+          position: "bottom-left"
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
